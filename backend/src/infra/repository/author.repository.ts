@@ -1,4 +1,6 @@
 import { Author } from "@domain/entities/author.entity";
+import { injectable } from "tsyringe";
+import Prisma from "@prisma/client";
 
 export interface AuthorRepository {
   create(author: Author): Promise<Author>;
@@ -7,6 +9,44 @@ export interface AuthorRepository {
   updateAuthor(authorId: string, author: Author): Promise<Author>;
 }
 
+@injectable()
+export class AuthorRepositoryPostgres implements AuthorRepository {
+  prismaService: Prisma.PrismaClient;
+  constructor() {
+    this.prismaService = new Prisma.PrismaClient();
+  }
+  async create(author: Author): Promise<Author> {
+    const authorAlreadyExists = await this.prismaService.author.findFirst({
+      where: {
+        name: author.name,
+      },
+    });
+    if (authorAlreadyExists) {
+      throw new Error("Author already exists");
+    }
+
+    const authorCreate = await this.prismaService.author.create({
+      data: {
+        name: author.name,
+        birthDate: author.birthDate,
+        authorId: author.authorId,
+      },
+    });
+
+    return authorCreate;
+  }
+  findAuthorByName(name: string): Promise<Author> {
+    throw new Error("Method not implemented.");
+  }
+  findAuthorById(name: string): Promise<Author> {
+    throw new Error("Method not implemented.");
+  }
+  updateAuthor(authorId: string, author: Author): Promise<Author> {
+    throw new Error("Method not implemented.");
+  }
+}
+
+@injectable()
 export class AuthorRepositoryInMemory implements AuthorRepository {
   authors: Author[] = [];
 
