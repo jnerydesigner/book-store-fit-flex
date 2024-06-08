@@ -1,5 +1,7 @@
 import pino from "pino";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class LoggerService {
   private logger: pino.Logger;
 
