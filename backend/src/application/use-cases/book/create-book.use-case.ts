@@ -1,25 +1,25 @@
 import { Book } from "@domain/entities/book.entity";
 import { BookRepositoryInMemory } from "@infra/repository/book.repository";
+import { UseCase } from "../use-case";
 
 export class CreateBook {
   constructor(readonly bookRepository: BookRepositoryInMemory) {}
 
-  async execute(bookInput: Input): Promise<void> {
+  async execute(bookInput: Input): Promise<Book> {
     const book = Book.create(
       bookInput.title,
       bookInput.author,
-      bookInput.release_date,
-      bookInput.description,
-      bookInput.id
+      bookInput.releaseDate,
+      bookInput.description
     );
-    await this.bookRepository.save(book);
+    return await this.bookRepository.save(book);
   }
 }
 
 type Input = {
   title: string;
   author: string;
-  release_date: string;
+  releaseDate: string;
   description: string;
   id?: string;
 };

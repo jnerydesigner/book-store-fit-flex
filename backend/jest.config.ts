@@ -24,5 +24,6 @@ module.exports = {
   coveragePathIgnorePatterns: [
     "<rootDir>/src/main\\.ts$",
     "<rootDir>/src/infra/modules/",
+    "<rootDir>/src/domain/entities/",
   ],
 };
