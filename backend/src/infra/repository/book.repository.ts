@@ -16,6 +16,7 @@ export class BookRepositoryInMemory implements BookRepository {
     const bookAlreadyExists = this.books.find(
       (book) => book.title === bookSave.title
     );
+    
 
     if (bookAlreadyExists) {
       throw new Error("Book already exists");
