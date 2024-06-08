@@ -1,6 +1,5 @@
 import { Book } from "@domain/entities/book.entity";
 import { BookRepositoryInMemory } from "@infra/repository/book.repository";
-import { UseCase } from "../use-case";
 
 export class CreateBook {
   constructor(readonly bookRepository: BookRepositoryInMemory) {}
