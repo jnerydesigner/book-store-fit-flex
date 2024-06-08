@@ -11,12 +11,9 @@ router.post("/authors", async (req, res) => {
 });
 
 router.get("/authors/:id", async (req, res) => {
-  const idAuthor = req.params.id;
-  console.log(idAuthor);
-
   const authorController = container.resolve(AuthorController);
 
-  return authorController.findAuthor(idAuthor);
+  return authorController.findAuthor(req, res);
 });
 
 export { router as authorRouter };

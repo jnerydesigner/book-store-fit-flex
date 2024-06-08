@@ -29,7 +29,9 @@ export class AuthorController {
     }
   }
 
-  async findAuthor(id: string): Promise<Author> {
-    return this.findAuthorByIdService.execute(id);
+  async findAuthor(req: Request, res: Response): Promise<Response> {
+    const response = await this.findAuthorByIdService.execute(req.params.id);
+
+    return res.status(201).json(response);
   }
 }
