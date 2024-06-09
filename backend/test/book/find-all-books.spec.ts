@@ -1,14 +1,14 @@
 import { CreateBook } from "@application/use-cases/book/create-book.use-case";
 import { BookRepositoryInMemory } from "@infra/repository/book.repository";
-import { FindAll } from "@application/use-cases/book/find-all.use-case";
+import { FindAllBooksUseCase } from "@application/use-cases/book/find-all.use-case";
 
 describe("Find All Books", () => {
   let bookRepository: BookRepositoryInMemory;
-  let findAll: FindAll;
+  let findAll: FindAllBooksUseCase;
   let createBook: CreateBook;
   beforeEach(() => {
     bookRepository = new BookRepositoryInMemory();
-    findAll = new FindAll(bookRepository);
+    findAll = new FindAllBooksUseCase(bookRepository);
     createBook = new CreateBook(bookRepository);
   });
 

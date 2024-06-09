@@ -1,23 +1,23 @@
 import { CreateBook } from "@application/use-cases/book/create-book.use-case";
 import { BookRepositoryInMemory } from "@infra/repository/book.repository";
-import { FindAll } from "@application/use-cases/book/find-all.use-case";
-import { FindById } from "@application/use-cases/book/find-by-id.use-case";
+import { FindAllBooksUseCase } from "@application/use-cases/book/find-all.use-case";
+import { FindByIdUseCase } from "@application/use-cases/book/find-by-id.use-case";
 import { FindBookByTitle } from "@application/use-cases/book/find-book-by-title.use-case";
-import { UpdateBook } from "@application/use-cases/book/update-book.use-case";
+import { UpdateBookUseCase } from "@application/use-cases/book/update-book.use-case";
 
 describe("Update Book", () => {
   let bookRepository: BookRepositoryInMemory;
-  let findAll: FindAll;
-  let findById: FindById;
+  let findAll: FindAllBooksUseCase;
+  let findById: FindByIdUseCase;
   let findBookByTitle: FindBookByTitle;
-  let updateBook: UpdateBook;
+  let updateBook: UpdateBookUseCase;
   let createBook: CreateBook;
   beforeEach(() => {
     bookRepository = new BookRepositoryInMemory();
-    findAll = new FindAll(bookRepository);
-    findById = new FindById(bookRepository);
+    findAll = new FindAllBooksUseCase(bookRepository);
+    findById = new FindByIdUseCase(bookRepository);
     findBookByTitle = new FindBookByTitle(bookRepository);
-    updateBook = new UpdateBook(bookRepository);
+    updateBook = new UpdateBookUseCase(bookRepository);
     createBook = new CreateBook(bookRepository);
   });
 
