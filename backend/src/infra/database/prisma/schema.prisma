@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Author {
-  authorId  String @id @default(uuid())
+  id        String @id @default(uuid())
   name      String
   birthDate String
   books     Book[]
@@ -17,10 +17,13 @@ model Author {
 }
 
 model Book {
-  id       String  @id @default(uuid())
-  title    String
-  authorId String?
-  Author   Author? @relation(fields: [authorId], references: [authorId])
+  id          String  @id @default(uuid())
+  title       String
+  releaseDate String
+  description String
+  authorId    String?
+  imageUrl    String?
+  Author      Author? @relation(fields: [authorId], references: [id])
 
   @@map("books")
 }
