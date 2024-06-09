@@ -1,17 +1,21 @@
 import { Book } from "@domain/entities/book.entity";
-import { BookRepositoryInMemory } from "@infra/repository/book.repository";
+import { BookRepository } from "@infra/repository/book.repository";
+import { inject, injectable } from "tsyringe";
 
-export class UpdateBook {
-  constructor(readonly bookRepository: BookRepositoryInMemory) {}
+@injectable()
+export class UpdateBookUseCase {
+  constructor(
+    @inject("BookRepository") readonly bookRepository: BookRepository
+  ) {}
   execute(id: string, bookInput: Input): Promise<Book> {
     const book = new Book(
       bookInput.id,
       bookInput.title,
-      bookInput.author,
+      bookInput.authorId,
       bookInput.releaseDate,
-      bookInput.description
+      bookInput.description,
+      bookInput.imageUrl
     );
-
 
     return this.bookRepository.updateBook(id, book);
   }
@@ -19,8 +23,9 @@ export class UpdateBook {
 
 type Input = {
   title: string;
-  author: string;
+  authorId: string;
   releaseDate: string;
   description: string;
+  imageUrl?: string;
   id?: string;
 };

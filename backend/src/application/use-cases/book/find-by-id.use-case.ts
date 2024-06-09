@@ -1,9 +1,13 @@
 import { Book } from "@domain/entities/book.entity";
-import { BookRepositoryInMemory } from "@infra/repository/book.repository";
+import { BookRepository } from "@infra/repository/book.repository";
+import { inject, injectable } from "tsyringe";
 
-export class FindById {
-  constructor(readonly bookRepository: BookRepositoryInMemory) {}
-  execute(id: string): Promise<Book> {
+@injectable()
+export class FindByIdUseCase {
+  constructor(
+    @inject("BookRepository") readonly bookRepository: BookRepository
+  ) {}
+  async execute(id: string): Promise<Book | any> {
     return this.bookRepository.findOneById(id);
   }
 }

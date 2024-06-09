@@ -1,8 +1,12 @@
 import { Book } from "@domain/entities/book.entity";
-import { BookRepositoryInMemory } from "@infra/repository/book.repository";
+import { BookRepository } from "@infra/repository/book.repository";
+import { inject, injectable } from "tsyringe";
 
-export class FindAll {
-  constructor(readonly bookRepository: BookRepositoryInMemory) {}
+@injectable()
+export class FindAllBooksUseCase {
+  constructor(
+    @inject("BookRepository") readonly bookRepository: BookRepository
+  ) {}
 
   async execute(): Promise<Book[]> {
     return await this.bookRepository.findAll();
