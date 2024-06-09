@@ -10,6 +10,7 @@ import express from "express";
 import { authorRouter } from "./presenters/routes/author.routes";
 
 import "@infra/container/container-inject";
+import { bookRouter } from "./presenters/routes/book.routes";
 
 const logger = new LoggerService();
 
@@ -18,6 +19,7 @@ app.use(bodyParser.json());
 const PORT = Number(process.env.SERVER_PORT) || 3000;
 
 app.use(authorRouter);
+app.use(bookRouter);
 
 app.get("/", (req, res) => {
   res.send({
