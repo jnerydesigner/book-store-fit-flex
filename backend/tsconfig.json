@@ -18,7 +18,7 @@
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "rootDir": "./src",
+    "rootDir": "./",
     "baseUrl": "./",
     "paths": {
       "@application/*": ["./src/application/*"],
@@ -26,7 +26,6 @@
       "@controllers/*": ["./src/presenters/controllers/*"],
       "@infra/*": ["./src/infra/*"]
     }
-  },
-  "include": ["src/**/*"]
+  }
   
 }

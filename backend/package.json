@@ -1,12 +1,14 @@
 {
-  "name": "backend",
+  "name": "api-books",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "test": "jest --no-coverage",
     "start:dev": "npx nodemon",
     "build": "rimraf ./build && tsc",
-    "start": "npm run build && node dist/src/main.js"
+    "start": "npm run build && node dist/src/main.js",
+    "prisma:generate": "npx prisma generate --schema ./src/infra/database/prisma/schema.prisma",
+    "prisma:migrate": "npx prisma migrate dev --schema ./src/infra/database/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",
