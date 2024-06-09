@@ -4,6 +4,8 @@ const Theme = {
     bgModal: "#F0F0F0",
     bgCardImage: "#E0E0E2",
     bgCardDescription: "#ffff",
+    bgButtonSave: "#78c1eb",
+    bgButtonCancel: "#d5d5d5",
   },
   input: {
     color: {

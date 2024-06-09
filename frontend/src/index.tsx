@@ -6,15 +6,18 @@ import Theme from "./theme";
 
 import App from "./App";
 import { GlobalStyles } from "./styles/globalStyles";
+import { ModalProvider } from "./context/modalContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={Theme}>
-      <GlobalStyles />
-      <App />
-    </ThemeProvider>
+    <ModalProvider>
+      <ThemeProvider theme={Theme}>
+        <GlobalStyles />
+        <App />
+      </ThemeProvider>
+    </ModalProvider>
   </React.StrictMode>
 );

@@ -12,7 +12,13 @@ export const ContainerHeader = styled.header`
   h2 {
     font-size: 40px;
   }
-  h3 {
-    font-size: 24px;
+
+  Button {
+    border: 0;
+    font-size: 28px;
+    cursor: pointer;
+    h3 {
+      font-size: 28px;
+    }
   }
 `;
