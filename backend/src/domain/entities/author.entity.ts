@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 
 export class Author {
   constructor(
-    readonly authorId: string,
+    readonly id: string,
     readonly name: string,
     readonly birthDate: string
   ) {}

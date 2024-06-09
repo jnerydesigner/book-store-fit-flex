@@ -4,19 +4,28 @@ export class Book {
   constructor(
     readonly id: string,
     readonly title: string,
-    readonly author: string,
+    readonly authorId: string,
     readonly releaseDate: string,
     readonly description: string,
+    readonly imageUrl?: string
   ) {}
 
   static create(
     title: string,
-    author: string,
+    authorId: string,
     releaseDate: string,
     description: string,
+    imageUrl?: string
   ) {
     const bookId = randomUUID();
 
-    return new Book(bookId, title, author, releaseDate, description);
+    return new Book(
+      bookId,
+      title,
+      authorId,
+      releaseDate,
+      description,
+      imageUrl
+    );
   }
 }
