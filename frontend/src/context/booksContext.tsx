@@ -20,6 +20,7 @@ export interface IBook {
 
 interface IBookContextProps {
   books: IBook[];
+  setBooks?: React.Dispatch<React.SetStateAction<IBook[]>>;
 }
 
 const BookContext = createContext<IBookContextProps | undefined>(undefined);
@@ -32,17 +33,18 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   const [books, setBooks] = useState<IBook[]>([]);
 
   useEffect(() => {
+    const booksFindAll = async () => {
+      const response = await fetch("http://localhost:3333/books/find-all");
+      const data = await response.json();
+      setBooks(data);
+    };
     booksFindAll();
   }, []);
 
-  const booksFindAll = async () => {
-    const response = await fetch("http://localhost:3333/books/find-all");
-    const data = await response.json();
-    setBooks(data);
-  };
-
   return (
-    <BookContext.Provider value={{ books }}>{children}</BookContext.Provider>
+    <BookContext.Provider value={{ books, setBooks }}>
+      {children}
+    </BookContext.Provider>
   );
 };
 

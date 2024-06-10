@@ -1,5 +1,5 @@
 import { Button } from "../button";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -12,14 +12,8 @@ import {
 } from "./style";
 import { useEffect, useState } from "react";
 import { useModal } from "../../context/modalContext";
-
-type InputsModal = {
-  title: string;
-  author: string;
-  releaseDate: string;
-  description: string;
-  image?: File;
-};
+import { IBook, useBooks } from "../../context/booksContext";
+import { limitWord } from "../../utils/limit-word.helper";
 
 const schema = yup.object().shape({
   title: yup.string().required("Campo obrigatório"),
@@ -36,12 +30,11 @@ const schema = yup.object().shape({
 
 export const FormBooks: React.FC = () => {
   const { setShowModal } = useModal();
+  const { setBooks } = useBooks();
   const handleCloseModal = () => {
     setShowModal(false);
   };
-  const [image, setImage] = useState<string | null>(null);
-  const [file, setFile] = useState<File | undefined>();
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [_, setImagePreview] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -56,7 +49,6 @@ export const FormBooks: React.FC = () => {
       const objectUrl = URL.createObjectURL(watchedImage[0]);
       setImagePreview(objectUrl);
 
-      // Cleanup the URL object when the component unmounts or the image changes
       return () => URL.revokeObjectURL(objectUrl);
     } else {
       setImagePreview(null);
@@ -67,7 +59,7 @@ export const FormBooks: React.FC = () => {
     const base64Image = await getBase64(data.image ? data.image[0] : null);
     const payload = {
       title: data.title,
-      authorId: "b125e328-81e7-4a5e-83e0-53add2bb42e2",
+      author: data.author,
       releaseDate: data.releaseDate,
       description: data.description,
       imageUrl: base64Image,
@@ -83,12 +75,20 @@ export const FormBooks: React.FC = () => {
       });
 
       if (response.ok) {
-        console.log("Form submitted successfully");
-        // Optionally close the modal or show a success message
+        const responseJson = await response.json();
+
+        const newBook: IBook = {
+          ...responseJson,
+          description: limitWord(responseJson.description, 20),
+        };
+
+        if (setBooks) {
+          setBooks((prevBooks) => [...prevBooks, newBook]);
+        }
+
         setShowModal(false);
       } else {
         console.error("Form submission failed");
-        // Handle server errors
       }
     } catch (error) {
       console.error("Error submitting form:", error);
