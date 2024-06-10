@@ -7,6 +7,10 @@ export const GlobalStyles = createGlobalStyle`
         box-sizing: border-box;
         font-family: "Inter", sans-serif;
     }
+    body{
+        background-color: ${(props) => props.theme.color.background};
+        color: ${(props) => props.theme.font.color.primary};
+    }
     h1,h2,h3{
         color: ${(props) => props.theme.font.color.primary};
     }

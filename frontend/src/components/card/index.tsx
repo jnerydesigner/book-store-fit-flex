@@ -1,25 +1,29 @@
 import React from "react";
 import { ContainerCard, ContainerCardImage, ContainerCardInfo } from "./style";
+import { IBook } from "../../context/booksContext";
 
-export const Card: React.FC = () => {
+interface CardProps extends IBook {}
+
+const Card: React.FC<CardProps> = ({
+  imageUrl,
+  Author,
+  authorId,
+  description,
+  id,
+  releaseDate,
+  title,
+}) => {
   return (
     <ContainerCard>
       <ContainerCardImage>
-        <img
-          src="https://m.media-amazon.com/images/I/81sTm5M7wjL._SY466_.jpg"
-          alt="Livro"
-        />
+        <img src={imageUrl} alt={title} />
       </ContainerCardImage>
       <ContainerCardInfo>
-        <h3>A revolução dos bichos: Um conto de fadas</h3>
-        <p>
-          Escrita em plena Segunda Guerra Mundial e publicada em 1945 depois de
-          ter sido rejeitada por várias editoras, essa pequena narrativa causou
-          desconforto ao satirizar ferozmente a ditadura stalinista numa época
-          em que os soviéticos ainda eram aliados do Ocidente na luta contra o
-          eixo nazi-fascista.
-        </p>
+        <h3>{title}</h3>
+        <p>{description}</p>
       </ContainerCardInfo>
     </ContainerCard>
   );
 };
+
+export default Card;
