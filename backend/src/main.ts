@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import dotenv from "dotenv";
 dotenv.config();
+import cors from "cors";
 import { LoggerService } from "@infra/logger/logger.service";
 
 import bodyParser from "body-parser";
@@ -15,6 +16,7 @@ import { bookRouter } from "./presenters/routes/book.routes";
 const logger = new LoggerService();
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 const PORT = Number(process.env.SERVER_PORT) || 3000;
 
