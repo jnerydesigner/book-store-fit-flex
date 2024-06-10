@@ -1,8 +1,10 @@
 import { IBook } from "@application/types/book.type";
+import { Author } from "@domain/entities/author.entity";
 import { Book } from "@domain/entities/book.entity";
 import { PrismaService } from "@infra/database/client/prisma.client";
+import { limitWord } from "@infra/helpers/limit-word.helper";
 import { LoggerService } from "@infra/logger/logger.service";
-import { BookMapperResponse, BooksMapper } from "@infra/mapper/books.mapper";
+import { BookMapperResponse } from "@infra/mapper/books.mapper";
 import { inject, injectable } from "tsyringe";
 
 export interface BookRepository {
@@ -21,7 +23,7 @@ export class BookRepositoryPostgres implements BookRepository {
     @inject(PrismaService) private readonly prismaService: PrismaService
   ) {}
   async findAll(): Promise<Book[] | IBook[]> {
-    const books = await this.prismaService.book.findMany({
+    let books = await this.prismaService.book.findMany({
       include: {
         Author: {
           select: {
@@ -31,8 +33,21 @@ export class BookRepositoryPostgres implements BookRepository {
       },
     });
 
-    await this.prismaService.disconnect();
-    return books;
+    const booksMap = books.map((book) => {
+      return {
+        id: book.id,
+        title: book.title,
+        releaseDate: book.releaseDate,
+        authorId: book.authorId,
+        description: limitWord(book.description, 20),
+        imageUrl: book.imageUrl,
+        Author: {
+          name: book.Author.name,
+        },
+      };
+    });
+
+    return booksMap;
   }
   async save(book: Book): Promise<Book | IBook> {
     const existsTitle = await this.prismaService.book.findFirst({
@@ -45,14 +60,17 @@ export class BookRepositoryPostgres implements BookRepository {
       throw new Error("Book already exists");
     }
 
-    const authorExists = await this.prismaService.author.findFirst({
+    let author = await this.prismaService.author.findFirst({
       where: {
-        id: book.authorId,
+        name: book.authorId,
       },
     });
 
-    if (!authorExists) {
-      throw new Error("Author not found");
+    if (!author) {
+      author = Author.createAuthor(book.authorId, "2021-09-01");
+      await this.prismaService.author.create({
+        data: author,
+      });
     }
 
     await this.prismaService.book.create({
@@ -60,7 +78,7 @@ export class BookRepositoryPostgres implements BookRepository {
         title: book.title,
         releaseDate: book.releaseDate,
         description: book.description,
-        authorId: book.authorId,
+        authorId: author.id,
         imageUrl: book.imageUrl,
         id: book.id,
       },
@@ -84,7 +102,6 @@ export class BookRepositoryPostgres implements BookRepository {
         },
       },
     });
-    console.log(bookAlreadyExists);
 
     if (!bookAlreadyExists) {
       throw new Error("Book not found");
@@ -110,42 +127,65 @@ export class BookRepositoryPostgres implements BookRepository {
       where: {
         title,
       },
+      include: {
+        Author: true,
+      },
     });
 
     if (!existTitle) {
       throw new Error("Book not found");
     }
 
-    return existTitle;
+    const bookResponse = new Book(
+      existTitle.id,
+      existTitle.title,
+      existTitle.Author.name,
+      existTitle.releaseDate,
+      existTitle.description,
+      existTitle.imageUrl
+    );
+
+    return bookResponse;
   }
-  async updateBook(bookId: string, bookInput: Book): Promise<Book | IBook> {
+  async updateBook(bookId: string, bookInput: Book): Promise<Book> {
     let book = await this.findOneById(bookId);
 
     book = {
-      id: book.id,
       ...bookInput,
+      id: bookId,
     };
 
     if (!book) {
       throw new Error("Book not found");
     }
 
-    const authorExists = await this.prismaService.author.findFirst({
+    let author = await this.prismaService.author.findFirst({
       where: {
-        id: book.authorId,
+        name: book.authorId,
       },
     });
 
-    if (!authorExists) {
-      throw new Error("Author not found");
+    if (!author) {
+      author = Author.createAuthor(book.authorId, "2021-09-01");
+      await this.prismaService.author.create({
+        data: author,
+      });
     }
 
-    return await this.prismaService.book.update({
+    const responseUpdate = await this.prismaService.book.update({
       where: {
-        id: bookId,
+        id: book.id,
       },
-      data: book,
+      data: {
+        ...book,
+        authorId: author.id,
+      },
+      include: {
+        Author: true,
+      },
     });
+
+    return responseUpdate;
   }
 }
 

@@ -44,12 +44,12 @@ export class BookController {
   }
 
   async createBook(req: Request, res: Response): Promise<Response> {
-    const { title, authorId, releaseDate, description, imageUrl } = req.body;
+    const { title, author, releaseDate, description, imageUrl } = req.body;
 
     try {
       const response = await this.createBookUseCase.execute({
         title,
-        authorId,
+        author,
         releaseDate,
         description,
         imageUrl,
@@ -64,12 +64,12 @@ export class BookController {
   }
 
   async updateBook(req: Request, res: Response): Promise<Response> {
-    const { title, authorId, releaseDate, description, imageUrl } = req.body;
+    const { title, author, releaseDate, description, imageUrl } = req.body;
 
     try {
       const response = await this.updateBookUseCase.execute(req.params.id, {
         title,
-        authorId,
+        author,
         releaseDate,
         description,
         imageUrl,

@@ -12,7 +12,7 @@ export class CreateBook {
   async execute(bookInput: Input) {
     const book = Book.create(
       bookInput.title,
-      bookInput.authorId,
+      bookInput.author,
       bookInput.releaseDate,
       bookInput.description,
       bookInput.imageUrl
@@ -24,7 +24,7 @@ export class CreateBook {
 
 type Input = {
   title: string;
-  authorId: string;
+  author: string;
   releaseDate: string;
   description: string;
   imageUrl?: string;
