@@ -1,16 +1,16 @@
 import { CreateBook } from "@application/use-cases/book/create-book.use-case";
 import { BookRepositoryInMemory } from "@infra/repository/book.repository";
-import { DeleteBook } from "@application/use-cases/book/delete-book.use-case";
+import { DeleteBookUseCase } from "@application/use-cases/book/delete-book.use-case";
 import { FindByIdUseCase } from "@application/use-cases/book/find-by-id.use-case";
 
 describe("Delete Book", () => {
   let bookRepository: BookRepositoryInMemory;
-  let deleteBook: DeleteBook;
+  let deleteBook: DeleteBookUseCase;
   let findById: FindByIdUseCase;
   let createBook: CreateBook;
   beforeEach(() => {
     bookRepository = new BookRepositoryInMemory();
-    deleteBook = new DeleteBook(bookRepository);
+    deleteBook = new DeleteBookUseCase(bookRepository);
     findById = new FindByIdUseCase(bookRepository);
     createBook = new CreateBook(bookRepository);
   });

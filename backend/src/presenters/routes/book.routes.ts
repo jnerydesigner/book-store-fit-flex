@@ -28,4 +28,10 @@ router.patch("/books/:id", async (req, res) => {
   return authorController.updateBook(req, res);
 });
 
+router.delete("/books/:id", async (req, res) => {
+  const authorController = container.resolve(BookController);
+
+  return authorController.deleteBook(req, res);
+});
+
 export { router as bookRouter };
