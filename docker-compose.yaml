@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  frontend_react:
+    container_name: frontend_react
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - fit-network
+
+  # postgres-fit:
+  #   image: postgres
+  #   container_name: postgres_fit
+  #   volumes:
+  #     - postgres_fit:/var/lib/postgresql/data
+  #   environment:
+  #     POSTGRES_USER: "fit"
+  #     POSTGRES_PASSWORD: "Fit1234"
+  #     POSTGRES_DB: "books"
+  #   ports:
+  #     - "5433:5432"
+  #   networks:
+  #     - fit-network
+
+  # pgadmin-compose-fit:
+  #   container_name: pgadmin-compose-fit
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: "jander.webmaster@gmail.com"
+  #     PGADMIN_DEFAULT_PASSWORD: "PgAdmin@2024"
+  #   ports:
+  #     - "16544:80"
+  #   depends_on:
+  #     - postgres-fit
+  #   networks:
+  #     - fit-network
+
+volumes:
+  postgres_fit:
+
+networks:
+  fit-network:
+    driver: bridge
