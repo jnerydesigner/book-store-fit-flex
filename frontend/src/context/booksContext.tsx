@@ -21,6 +21,9 @@ export interface IBook {
 interface IBookContextProps {
   books: IBook[];
   setBooks?: React.Dispatch<React.SetStateAction<IBook[]>>;
+  // book?: IBook;
+  // setBook?: React.Dispatch<React.SetStateAction<IBook>>;
+  // handleSearchBook: (bookId: string) => void;
 }
 
 const BookContext = createContext<IBookContextProps | undefined>(undefined);
@@ -31,6 +34,7 @@ interface BookProviderProps {
 
 export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   const [books, setBooks] = useState<IBook[]>([]);
+  // const [book, setBook] = useState<IBook>({} as IBook);
 
   useEffect(() => {
     const booksFindAll = async () => {

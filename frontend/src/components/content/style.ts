@@ -8,4 +8,8 @@ export const ContainerContent = styled.main`
   gap: 28px;
 
   margin-top: 60px;
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 `;
