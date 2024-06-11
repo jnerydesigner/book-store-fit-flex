@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams, useRoutes } from "react-router-dom";
 import {
   ButtonDelete,
   ButtonEdit,
@@ -8,10 +8,22 @@ import {
   DetailColumnEditAndDelete,
 } from "./style";
 import { IoChevronBackOutline } from "react-icons/io5";
+import axios from "axios";
+import { useBooks } from "../../context/booksContext";
 
 export const HeaderDetail = () => {
-  const handleDelete = (bookId: string) => {
-    console.log(bookId);
+  const { setBooks } = useBooks();
+
+  const navigate = useNavigate();
+  const { book_id: bookId } = useParams() as { book_id: string };
+  const handleDelete = async (bookId: string) => {
+    axios.delete(`http://localhost:3333/books/${bookId}`);
+
+    if (setBooks) {
+      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookId));
+    }
+
+    navigate("/");
   };
   return (
     <ContainerHeader>
@@ -24,7 +36,9 @@ export const HeaderDetail = () => {
         </DetailColumnBack>
         <DetailColumnEditAndDelete>
           <ButtonEdit>Editar</ButtonEdit>
-          <ButtonDelete onClick={() => handleDelete("1")}>Excluir</ButtonDelete>
+          <ButtonDelete onClick={() => handleDelete(bookId)}>
+            Excluir
+          </ButtonDelete>
         </DetailColumnEditAndDelete>
       </ContainerHeaderDetail>
     </ContainerHeader>
