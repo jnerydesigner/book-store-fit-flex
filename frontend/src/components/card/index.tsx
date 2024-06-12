@@ -1,6 +1,6 @@
 import React from "react";
 import { ContainerCard, ContainerCardImage, ContainerCardInfo } from "./style";
-import { IBook } from "../../context/booksContext";
+import { IBook } from "../../types/book.types";
 
 interface CardProps extends IBook {}
 

@@ -1,9 +1,10 @@
-import React, {
+import axios from "axios";
+import {
   createContext,
-  useContext,
-  useState,
   ReactNode,
+  useContext,
   useEffect,
+  useState,
 } from "react";
 
 export interface IBook {
@@ -19,11 +20,8 @@ export interface IBook {
 }
 
 interface IBookContextProps {
-  books: IBook[];
-  setBooks?: React.Dispatch<React.SetStateAction<IBook[]>>;
-  // book?: IBook;
-  // setBook?: React.Dispatch<React.SetStateAction<IBook>>;
-  // handleSearchBook: (bookId: string) => void;
+  booksContext: IBook[];
+  setBooksContext?: React.Dispatch<React.SetStateAction<IBook[]>>;
 }
 
 const BookContext = createContext<IBookContextProps | undefined>(undefined);
@@ -33,20 +31,17 @@ interface BookProviderProps {
 }
 
 export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
-  const [books, setBooks] = useState<IBook[]>([]);
-  // const [book, setBook] = useState<IBook>({} as IBook);
-
+  const [booksContext, setBooksContext] = useState<IBook[]>([]);
   useEffect(() => {
     const booksFindAll = async () => {
-      const response = await fetch("http://localhost:3333/books/find-all");
-      const data = await response.json();
-      setBooks(data);
+      const response = await axios.get("http://localhost:3333/books/find-all");
+      setBooksContext(response.data);
     };
     booksFindAll();
   }, []);
 
   return (
-    <BookContext.Provider value={{ books, setBooks }}>
+    <BookContext.Provider value={{ booksContext, setBooksContext }}>
       {children}
     </BookContext.Provider>
   );

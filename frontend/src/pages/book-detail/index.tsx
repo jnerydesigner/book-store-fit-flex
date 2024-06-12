@@ -5,52 +5,82 @@ import {
   ContainerImage,
   ContainerDetailsAuthorAndRelease,
   ContainerDetails,
+  ImageBook,
 } from "./style";
 import { useEffect, useState, useCallback } from "react";
-import { IBook } from "../../context/booksContext";
 import { HeaderDetail } from "../../components/header-detail";
-import axios from "axios";
+import { ModalEdit } from "../../components/modal-edit";
+import { useModal } from "../../context/modalContext";
+import { IBook, IBookContext } from "../../types/book.types";
+import { useBooks } from "../../context/book.context";
 
 export const BookDetail = () => {
+  const { book_id: bookId } = useParams() as { book_id: string };
   const [book, setBook] = useState<IBook>({} as IBook);
-  const [author, setAuthor] = useState<string>("");
-  const { book_id } = useParams() as { book_id: string };
+  const [bookResponse, setBookResponse] = useState<IBookContext>(
+    {} as IBookContext
+  );
 
-  const handleSearchBook = useCallback(
-    async (bookId: string) => {
-      console.log(book_id);
-      const { data } = await axios.get<IBook>(
-        `http://localhost:3333/books/${bookId}`
-      );
+  const { showModalEdit } = useModal();
+  const { booksContext } = useBooks();
+  const handlePayloadBook = useCallback(
+    async (id: string): Promise<IBookContext> => {
+      const res = booksContext.find((book) => {
+        return book.id === id;
+      }) as IBook;
 
-      console.log(data.Author.name);
+      if (res === undefined) {
+        return {} as IBookContext;
+      }
 
-      setAuthor(data.Author.name);
-      setBook(data);
+      const response = {
+        id: res.id,
+        title: res.title,
+        releaseDate: res.releaseDate,
+        description: res.description,
+        authorId: res.authorId,
+        imageUrl: res.imageUrl,
+        author: "Jander Nery",
+      };
+
+      setBookResponse(response);
+
+      return response;
     },
-    [book_id]
+    [booksContext]
   );
 
   useEffect(() => {
-    handleSearchBook(book_id);
-  }, [book_id, handleSearchBook]);
+    handlePayloadBook(bookId);
+  }, [bookId, handlePayloadBook]);
+
+  if (!book) return <div>Loading...</div>;
 
   return (
-    <ContainerBookDetail>
-      <HeaderDetail />
-      <ContainerDetails>
-        <ContainerColumnDetails>
-          <h1>{book.title}</h1>
-          <ContainerDetailsAuthorAndRelease>
-            <p>Por {author}</p>
-            <p>Publicado em {book.releaseDate}</p>
-          </ContainerDetailsAuthorAndRelease>
-          <p>{book.description}</p>
-        </ContainerColumnDetails>
-        <ContainerImage>
-          <img src={book.imageUrl} alt={book.title} />
-        </ContainerImage>
-      </ContainerDetails>
-    </ContainerBookDetail>
+    <>
+      <ContainerBookDetail>
+        <HeaderDetail />
+        <ContainerDetails>
+          <ContainerColumnDetails>
+            <h1>
+              {bookResponse.title} {book.title}
+            </h1>
+            <ContainerDetailsAuthorAndRelease>
+              <p>Por {bookResponse.author}</p>
+              <p>Publicado em {book.releaseDate}</p>
+            </ContainerDetailsAuthorAndRelease>
+            <p>{bookResponse.description}</p>
+          </ContainerColumnDetails>
+          <ContainerImage>
+            <ImageBook src={bookResponse.imageUrl} alt={bookResponse.title} />
+          </ContainerImage>
+        </ContainerDetails>
+      </ContainerBookDetail>
+      <ModalEdit
+        active={showModalEdit}
+        authorActive={bookResponse.author}
+        bookActive={bookResponse}
+      />
+    </>
   );
 };

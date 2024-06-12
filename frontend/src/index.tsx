@@ -3,11 +3,12 @@ import ReactDOM from "react-dom/client";
 
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router/router";
-import { BookProvider } from "./context/booksContext";
+
 import { ModalProvider } from "./context/modalContext";
 import { GlobalStyles } from "./styles/globalStyles";
 import { ThemeProvider } from "styled-components";
 import Theme from "./theme";
+import { BookProvider } from "./context/book.context";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

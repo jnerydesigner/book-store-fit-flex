@@ -41,7 +41,12 @@ export const ContainerDetailsAuthorAndRelease = styled.div`
 `;
 
 export const ContainerImage = styled.div`
-  image {
-    width: 100%;
-  }
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ImageBook = styled.img`
+  width: 100%;
 `;

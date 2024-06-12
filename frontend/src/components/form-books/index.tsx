@@ -12,8 +12,10 @@ import {
 } from "./style";
 import { useEffect, useState } from "react";
 import { useModal } from "../../context/modalContext";
-import { IBook, useBooks } from "../../context/booksContext";
 import { limitWord } from "../../utils/limit-word.helper";
+import { IBook } from "../../types/book.types";
+import axios from "axios";
+import { useBooks } from "../../context/book.context";
 
 const schema = yup.object().shape({
   title: yup.string().required("Campo obrigatório"),
@@ -29,8 +31,16 @@ const schema = yup.object().shape({
 });
 
 export const FormBooks: React.FC = () => {
+  const [books, setBooks] = useState<IBook[]>([]);
   const { setShowModal } = useModal();
-  const { setBooks } = useBooks();
+  const { setBooksContext } = useBooks();
+
+  useEffect(() => {
+    axios.get("http://localhost:3333/books/find-all").then((response) => {
+      console.log(response.data);
+      setBooks(response.data);
+    });
+  }, []);
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -66,24 +76,14 @@ export const FormBooks: React.FC = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:3333/books/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const res = await axios.post(
+        "http://localhost:3333/books/create",
+        payload
+      );
 
-      if (response.ok) {
-        const responseJson = await response.json();
-
-        const newBook: IBook = {
-          ...responseJson,
-          description: limitWord(responseJson.description, 20),
-        };
-
-        if (setBooks) {
-          setBooks((prevBooks) => [...prevBooks, newBook]);
+      if (res.status === 201) {
+        if (setBooksContext) {
+          setBooksContext([...books, res.data]);
         }
 
         setShowModal(false);

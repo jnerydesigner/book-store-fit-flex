@@ -4,6 +4,9 @@ interface ModalContextProps {
   showModal: boolean;
   toggleModal: () => void;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showModalEdit: boolean;
+  toggleModalEdit: () => void;
+  setShowModalEdit: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ModalContext = createContext<ModalContextProps | undefined>(undefined);
@@ -14,13 +17,27 @@ interface ModalProviderProps {
 
 export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModalEdit, setShowModalEdit] = useState<boolean>(false);
 
   const toggleModal = () => {
     setShowModal((prevState) => !prevState);
   };
 
+  const toggleModalEdit = () => {
+    setShowModalEdit((prevState) => !prevState);
+  };
+
   return (
-    <ModalContext.Provider value={{ showModal, toggleModal, setShowModal }}>
+    <ModalContext.Provider
+      value={{
+        showModal,
+        toggleModal,
+        setShowModal,
+        showModalEdit,
+        toggleModalEdit,
+        setShowModalEdit,
+      }}
+    >
       {children}
     </ModalContext.Provider>
   );

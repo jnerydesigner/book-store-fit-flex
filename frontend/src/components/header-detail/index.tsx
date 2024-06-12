@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams, useRoutes } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   ButtonDelete,
   ButtonEdit,
@@ -9,10 +9,13 @@ import {
 } from "./style";
 import { IoChevronBackOutline } from "react-icons/io5";
 import axios from "axios";
-import { useBooks } from "../../context/booksContext";
+import { useModal } from "../../context/modalContext";
+import { useState } from "react";
+import { IBook } from "../../types/book.types";
 
 export const HeaderDetail = () => {
-  const { setBooks } = useBooks();
+  const { setShowModalEdit } = useModal();
+  const [_, setBooks] = useState<IBook[]>();
 
   const navigate = useNavigate();
   const { book_id: bookId } = useParams() as { book_id: string };
@@ -20,7 +23,7 @@ export const HeaderDetail = () => {
     axios.delete(`http://localhost:3333/books/${bookId}`);
 
     if (setBooks) {
-      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookId));
+      setBooks((prevBooks) => prevBooks?.filter((book) => book.id !== bookId));
     }
 
     navigate("/");
@@ -35,7 +38,7 @@ export const HeaderDetail = () => {
           <p>Voltar</p>
         </DetailColumnBack>
         <DetailColumnEditAndDelete>
-          <ButtonEdit>Editar</ButtonEdit>
+          <ButtonEdit onClick={() => setShowModalEdit(true)}>Editar</ButtonEdit>
           <ButtonDelete onClick={() => handleDelete(bookId)}>
             Excluir
           </ButtonDelete>
