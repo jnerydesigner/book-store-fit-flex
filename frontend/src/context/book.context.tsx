@@ -22,6 +22,8 @@ export interface IBook {
 interface IBookContextProps {
   booksContext: IBook[];
   setBooksContext?: React.Dispatch<React.SetStateAction<IBook[]>>;
+  author: string;
+  setAuthor: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const BookContext = createContext<IBookContextProps | undefined>(undefined);
@@ -32,16 +34,20 @@ interface BookProviderProps {
 
 export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   const [booksContext, setBooksContext] = useState<IBook[]>([]);
+  const [author, setAuthor] = useState<string>("");
   useEffect(() => {
     const booksFindAll = async () => {
       const response = await axios.get("http://localhost:3333/books/find-all");
+
       setBooksContext(response.data);
     };
     booksFindAll();
   }, []);
 
   return (
-    <BookContext.Provider value={{ booksContext, setBooksContext }}>
+    <BookContext.Provider
+      value={{ booksContext, setBooksContext, author, setAuthor }}
+    >
       {children}
     </BookContext.Provider>
   );

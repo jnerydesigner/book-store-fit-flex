@@ -99,42 +99,7 @@ export const FormBookEdit: React.FC<IFormBookEdit> = ({
       });
   }, [bookId, authorActive, setValue]);
 
-  // const handlePayloadBook = useCallback(
-  //   async (id: string): Promise<IBookContext> => {
-  //     const res = booksContext.find((book) => {
-  //       return book.id === id;
-  //     }) as IBook;
-
-  //     if (res === undefined) {
-  //       return {} as IBookContext;
-  //     }
-
-  //     const response = {
-  //       id: res.id,
-  //       title: res.title,
-  //       releaseDate: res.releaseDate,
-  //       description: res.description,
-  //       authorId: res.authorId,
-  //       imageUrl: res.imageUrl,
-  //       author: "Jander Nery",
-  //     };
-
-  //     setBookResponse(response);
-
-  //     return response;
-  //   },
-  //   [booksContext]
-  // );
-
-  // useEffect(() => {
-  //   // handlePayloadBook(bookId);
-  //   axios.get(`http://localhost:3333/books/${bookId}`).then((response) => {
-  //     setBookResponse(response.data);
-  //   });
-  // }, [bookId, handlePayloadBook]);
-
   const onSubmit = async (data: any) => {
-    console.log(data);
     const base64Image = await getBase64(data.image ? data.image[0] : null);
     const payloadData = {
       title: data.title,
@@ -153,11 +118,12 @@ export const FormBookEdit: React.FC<IFormBookEdit> = ({
       );
 
       if (response.data.id !== undefined || response.data.id !== null) {
+        const { data: booksResponse } = await axios.get<IBook[]>(
+          "http://localhost:3333/books/find-all"
+        );
         if (setBooksContext) {
           setBooksContext((prevBook) => [prevBook, response.data]);
         }
-
-        console.log(response.data.title);
 
         setShowModalEdit(false);
       } else {

@@ -9,8 +9,12 @@ export const ContainerHeader = styled.header`
   align-items: flex-end;
   padding: 5px;
   margin-bottom: 20px;
-  h2 {
-    font-size: 40px;
+  a {
+    text-decoration: none;
+    color: black;
+    h2 {
+      font-size: 40px;
+    }
   }
 
   Button {

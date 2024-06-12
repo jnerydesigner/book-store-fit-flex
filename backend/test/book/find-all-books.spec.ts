@@ -31,7 +31,15 @@ describe("Find All Books", () => {
     const receivedBookOne = await createBook.execute(book1);
     const receivedBookTwo = await createBook.execute(book2);
 
-    const books = await findAll.execute();
+    const search = {
+      titleSearch: "",
+      descriptionSearch: "",
+    };
+
+    const books = await findAll.execute(
+      search.titleSearch,
+      search.descriptionSearch
+    );
 
     expect(books).toHaveLength(2);
     expect(books).toEqual(
@@ -40,7 +48,14 @@ describe("Find All Books", () => {
   });
 
   it("should return empty array", async () => {
-    const books = await findAll.execute();
+    const search = {
+      titleSearch: "",
+      descriptionSearch: "",
+    };
+    const books = await findAll.execute(
+      search.titleSearch,
+      search.descriptionSearch
+    );
 
     expect(books).toHaveLength(0);
   });

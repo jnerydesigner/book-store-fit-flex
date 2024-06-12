@@ -37,7 +37,6 @@ export const FormBooks: React.FC = () => {
 
   useEffect(() => {
     axios.get("http://localhost:3333/books/find-all").then((response) => {
-      console.log(response.data);
       setBooks(response.data);
     });
   }, []);
@@ -82,8 +81,13 @@ export const FormBooks: React.FC = () => {
       );
 
       if (res.status === 201) {
+        const newBookCreated = {
+          ...res.data,
+          description: limitWord(res.data.description, 20),
+        };
+
         if (setBooksContext) {
-          setBooksContext([...books, res.data]);
+          setBooksContext([...books, newBookCreated]);
         }
 
         setShowModal(false);

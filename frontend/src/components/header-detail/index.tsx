@@ -12,9 +12,11 @@ import axios from "axios";
 import { useModal } from "../../context/modalContext";
 import { useState } from "react";
 import { IBook } from "../../types/book.types";
+import { useBooks } from "../../context/book.context";
 
 export const HeaderDetail = () => {
   const { setShowModalEdit } = useModal();
+  const { setBooksContext } = useBooks();
   const [_, setBooks] = useState<IBook[]>();
 
   const navigate = useNavigate();
@@ -28,11 +30,19 @@ export const HeaderDetail = () => {
 
     navigate("/");
   };
+
+  const handleBackHome = async () => {
+    const response = await axios.get(`http://localhost:3333/books/find-all`);
+    if (setBooksContext) {
+      setBooksContext(response.data);
+    }
+    navigate("/");
+  };
   return (
     <ContainerHeader>
       <ContainerHeaderDetail>
         <DetailColumnBack>
-          <Link to="/">
+          <Link to={"/"} onClick={handleBackHome}>
             <IoChevronBackOutline />
           </Link>
           <p>Voltar</p>
