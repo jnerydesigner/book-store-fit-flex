@@ -8,7 +8,8 @@
     "build": "rimraf ./build && tsc",
     "start": "npm run build && node dist/src/main.js",
     "prisma:generate": "npx prisma generate --schema ./src/infra/database/prisma/schema.prisma",
-    "prisma:migrate": "npx prisma migrate dev --schema ./src/infra/database/prisma/schema.prisma"
+    "prisma:migrate": "npx prisma migrate dev --schema ./src/infra/database/prisma/schema.prisma",
+    "prisma:seed": "ts-node ./src/infra/database/seeder/seed.ts"
   },
   "keywords": [],
   "author": "",

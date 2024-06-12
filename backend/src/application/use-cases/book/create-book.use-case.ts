@@ -1,5 +1,5 @@
 import { Book } from "@domain/entities/book.entity";
-import { BookMapperResponse } from "@infra/mapper/books.mapper";
+
 import { BookRepository } from "@infra/repository/book.repository";
 import { inject, injectable } from "tsyringe";
 
@@ -9,7 +9,7 @@ export class CreateBook {
     @inject("BookRepository") readonly bookRepository: BookRepository
   ) {}
 
-  async execute(bookInput: Input) {
+  async execute(bookInput: InputBook) {
     const book = Book.create(
       bookInput.title,
       bookInput.author,
@@ -22,7 +22,7 @@ export class CreateBook {
   }
 }
 
-type Input = {
+export type InputBook = {
   title: string;
   author: string;
   releaseDate: string;
