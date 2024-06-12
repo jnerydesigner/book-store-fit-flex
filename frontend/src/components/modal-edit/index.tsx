@@ -10,22 +10,16 @@ import { IBookContext } from "../../types/book.types";
 
 interface ModalProps {
   active: boolean;
-  authorActive: string;
-  bookActive: IBookContext;
 }
 
-export const ModalEdit: React.FC<ModalProps> = ({
-  active,
-  authorActive,
-  bookActive,
-}) => {
+export const ModalEdit: React.FC<ModalProps> = ({ active }) => {
   return (
     <ContainerModalBackgroundOpacity active={active}>
       <ContainerModal>
         <ContainerTitle>
           <h2>Editar livro</h2>
         </ContainerTitle>
-        <FormBookEdit authorActive={authorActive} bookOne={bookActive} />
+        <FormBookEdit />
       </ContainerModal>
     </ContainerModalBackgroundOpacity>
   );

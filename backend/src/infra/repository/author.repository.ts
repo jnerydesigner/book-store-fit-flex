@@ -64,7 +64,7 @@ export class AuthorRepositoryPostgres implements AuthorRepository {
     });
 
     if (!authorAlreadyExists) {
-      throw new Error("Author not found");
+      return;
     }
 
     await this.prismaService.disconnect();

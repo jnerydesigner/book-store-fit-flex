@@ -18,5 +18,3 @@ RUN npx prisma generate --schema=/usr/src/app/src/infra/database/prisma/schema.p
 RUN yarn build
 
 ENTRYPOINT [ "/usr/src/app/entrypoint.sh", "yarn", "start:prod" ]
-
-CMD [ "yarn", "start:prod" ]

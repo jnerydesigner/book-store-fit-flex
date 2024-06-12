@@ -7,47 +7,43 @@ import {
   ContainerDetails,
   ImageBook,
 } from "./style";
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { HeaderDetail } from "../../components/header-detail";
 import { ModalEdit } from "../../components/modal-edit";
 import { useModal } from "../../context/modalContext";
 import { IBook, IBookContext } from "../../types/book.types";
 import { useBooks } from "../../context/book.context";
+import api from "../../api";
 
 export const BookDetail = () => {
-  const { book_id: bookId } = useParams() as { book_id: string };
   const [book, setBook] = useState<IBook>({} as IBook);
-  const [bookResponse, setBookResponse] = useState<IBookContext>(
-    {} as IBookContext
-  );
+  const { book_id: bookId } = useParams() as { book_id: string };
+  const { bookResponse, setBookResponse } = useBooks();
 
   const { showModalEdit } = useModal();
-  const { booksContext } = useBooks();
+
   const handlePayloadBook = useCallback(
     async (id: string): Promise<IBookContext> => {
-      const res = booksContext.find((book) => {
-        return book.id === id;
-      }) as IBook;
-
-      if (res === undefined) {
-        return {} as IBookContext;
-      }
+      const resp = await api.get(`/books/${id}`);
 
       const response = {
-        id: res.id,
-        title: res.title,
-        releaseDate: res.releaseDate,
-        description: res.description,
-        authorId: res.authorId,
-        imageUrl: res.imageUrl,
-        author: "Jander Nery",
+        id: resp.data.id,
+        title: resp.data.title,
+        releaseDate: resp.data.releaseDate,
+        description: resp.data.description,
+        authorId: resp.data.authorId,
+        imageUrl: resp.data.imageUrl,
+        author: resp.data.authorId,
+        Author: {
+          name: resp.data.authorId,
+        },
       };
 
-      setBookResponse(response);
+      if (setBookResponse) setBookResponse(response);
 
       return response;
     },
-    [booksContext]
+    []
   );
 
   useEffect(() => {
@@ -63,24 +59,23 @@ export const BookDetail = () => {
         <ContainerDetails>
           <ContainerColumnDetails>
             <h1>
-              {bookResponse.title} {book.title}
+              {bookResponse && bookResponse.title} {book.title}
             </h1>
             <ContainerDetailsAuthorAndRelease>
-              <p>Por {bookResponse.author}</p>
+              <p>Por {bookResponse?.authorId}</p>
               <p>Publicado em {book.releaseDate}</p>
             </ContainerDetailsAuthorAndRelease>
-            <p>{bookResponse.description}</p>
+            <p>{bookResponse && bookResponse.description}</p>
           </ContainerColumnDetails>
           <ContainerImage>
-            <ImageBook src={bookResponse.imageUrl} alt={bookResponse.title} />
+            <ImageBook
+              src={bookResponse && bookResponse.imageUrl}
+              alt={bookResponse && bookResponse.title}
+            />
           </ContainerImage>
         </ContainerDetails>
       </ContainerBookDetail>
-      <ModalEdit
-        active={showModalEdit}
-        authorActive={bookResponse.author}
-        bookActive={bookResponse}
-      />
+      <ModalEdit active={showModalEdit} />
     </>
   );
 };

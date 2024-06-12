@@ -8,11 +8,12 @@ import {
   DetailColumnEditAndDelete,
 } from "./style";
 import { IoChevronBackOutline } from "react-icons/io5";
-import axios from "axios";
+
 import { useModal } from "../../context/modalContext";
 import { useState } from "react";
 import { IBook } from "../../types/book.types";
 import { useBooks } from "../../context/book.context";
+import api from "../../api";
 
 export const HeaderDetail = () => {
   const { setShowModalEdit } = useModal();
@@ -22,7 +23,7 @@ export const HeaderDetail = () => {
   const navigate = useNavigate();
   const { book_id: bookId } = useParams() as { book_id: string };
   const handleDelete = async (bookId: string) => {
-    axios.delete(`http://localhost:3333/books/${bookId}`);
+    api.delete(`/books/${bookId}`);
 
     if (setBooks) {
       setBooks((prevBooks) => prevBooks?.filter((book) => book.id !== bookId));
@@ -32,7 +33,7 @@ export const HeaderDetail = () => {
   };
 
   const handleBackHome = async () => {
-    const response = await axios.get(`http://localhost:3333/books/find-all`);
+    const response = await api.get(`/books/find-all`);
     if (setBooksContext) {
       setBooksContext(response.data);
     }

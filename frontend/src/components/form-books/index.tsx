@@ -14,8 +14,9 @@ import { useEffect, useState } from "react";
 import { useModal } from "../../context/modalContext";
 import { limitWord } from "../../utils/limit-word.helper";
 import { IBook } from "../../types/book.types";
-import axios from "axios";
+
 import { useBooks } from "../../context/book.context";
+import api from "../../api";
 
 const schema = yup.object().shape({
   title: yup.string().required("Campo obrigatório"),
@@ -36,7 +37,7 @@ export const FormBooks: React.FC = () => {
   const { setBooksContext } = useBooks();
 
   useEffect(() => {
-    axios.get("http://localhost:3333/books/find-all").then((response) => {
+    api.get("/books/find-all").then((response) => {
       setBooks(response.data);
     });
   }, []);
@@ -44,12 +45,7 @@ export const FormBooks: React.FC = () => {
     setShowModal(false);
   };
   const [_, setImagePreview] = useState<string | null>(null);
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit, watch } = useForm({
     resolver: yupResolver(schema),
   });
   const watchedImage = watch("image") as FileList | undefined;
@@ -75,10 +71,7 @@ export const FormBooks: React.FC = () => {
     };
 
     try {
-      const res = await axios.post(
-        "http://localhost:3333/books/create",
-        payload
-      );
+      const res = await api.post("/books/create", payload);
 
       if (res.status === 201) {
         const newBookCreated = {

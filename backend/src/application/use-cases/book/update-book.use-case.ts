@@ -13,7 +13,7 @@ export class UpdateBookUseCase {
     const book = new Book(
       bookInput.id,
       bookInput.title,
-      bookInput.author,
+      bookInput.authorId,
       bookInput.releaseDate,
       bookInput.description,
       bookInput.imageUrl
@@ -25,7 +25,7 @@ export class UpdateBookUseCase {
 
 type Input = {
   title: string;
-  author: string;
+  authorId: string;
   releaseDate: string;
   description: string;
   imageUrl?: string;

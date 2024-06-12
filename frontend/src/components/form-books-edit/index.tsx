@@ -10,12 +10,12 @@ import {
   ContainerRowInputDescription,
   ContainerRowButtons,
 } from "./style";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useModal } from "../../context/modalContext";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { IBook, IBookContext } from "../../types/book.types";
 import { useBooks } from "../../context/book.context";
+import api from "../../api";
 
 const schema = yup.object().shape({
   title: yup.string(),
@@ -30,40 +30,26 @@ const schema = yup.object().shape({
   }),
 });
 
-interface IFormBookEdit {
-  authorActive: string;
-  bookOne: IBookContext;
-}
-
-export const FormBookEdit: React.FC<IFormBookEdit> = ({
-  authorActive,
-  bookOne,
-}) => {
+export const FormBookEdit: React.FC = () => {
+  const { bookResponse } = useBooks();
   const { book_id: bookId } = useParams() as { book_id: string };
   const [payload, setPayload] = useState<IBookContext>({
-    id: bookOne.id,
-    title: bookOne.title,
-    releaseDate: bookOne.releaseDate,
-    description: bookOne.description,
-    authorId: bookOne.authorId,
-    imageUrl: bookOne.imageUrl,
-    author: authorActive,
+    id: bookResponse?.id || "",
+    title: bookResponse?.title || "",
+    releaseDate: bookResponse?.releaseDate || "",
+    description: bookResponse?.description || "",
+    authorId: bookResponse?.authorId || "",
+    imageUrl: bookResponse?.imageUrl || "",
+    author: bookResponse?.authorId || "",
   });
   const { setShowModalEdit } = useModal();
-  const { setBooksContext, booksContext } = useBooks();
+  const { setBooksContext, setBookResponse } = useBooks();
 
-  const [authorEdit, setAuthorEdit] = useState<string>("");
   const handleCloseModal = () => {
     setShowModalEdit(false);
   };
   const [_, setImagePreview] = useState<string | null>(null);
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    setValue,
-  } = useForm({
+  const { register, handleSubmit, watch, setValue } = useForm({
     resolver: yupResolver(schema),
   });
   const watchedImage = watch("image") as FileList | undefined;
@@ -79,50 +65,44 @@ export const FormBookEdit: React.FC<IFormBookEdit> = ({
   }, [watchedImage]);
 
   useEffect(() => {
-    axios
-      .get<IBook>(`http://localhost:3333/books/${bookId}`)
-      .then((response) => {
-        const bookData = response.data;
-        setPayload({
-          id: bookData.id,
-          title: bookData.title,
-          releaseDate: bookData.releaseDate,
-          description: bookData.description,
-          authorId: bookData.authorId,
-          imageUrl: bookData.imageUrl,
-          author: authorActive,
-        });
-        setValue("title", bookData.title);
-        setValue("author", bookData.Author.name);
-        setValue("releaseDate", bookData.releaseDate);
-        setValue("description", bookData.description);
+    api.get<IBook>(`/books/${bookId}`).then((response) => {
+      const bookData = response.data;
+      setPayload({
+        id: bookData.id,
+        title: bookData.title,
+        releaseDate: bookData.releaseDate,
+        description: bookData.description,
+        authorId: bookData.authorId,
+        imageUrl: bookData.imageUrl,
+        author: bookData.authorId as string,
       });
-  }, [bookId, authorActive, setValue]);
+      setValue("title", bookData.title);
+      setValue("author", bookData.authorId);
+      setValue("releaseDate", bookData.releaseDate);
+      setValue("description", bookData.description);
+    });
+  }, [bookId, setValue]);
 
   const onSubmit = async (data: any) => {
     const base64Image = await getBase64(data.image ? data.image[0] : null);
-    const payloadData = {
+    let payloadData = {
       title: data.title,
-      author: data.author,
+      authorId: data.author,
       releaseDate: data.releaseDate,
       description: data.description,
       imageUrl: base64Image || payload.imageUrl,
     };
 
     try {
-      const response = await axios.patch<any>(
-        `http://localhost:3333/books/${bookId}`,
-        {
-          ...payloadData,
-        }
-      );
+      const response = await api.patch<any>(`/books/${bookId}`, payloadData);
 
       if (response.data.id !== undefined || response.data.id !== null) {
-        const { data: booksResponse } = await axios.get<IBook[]>(
-          "http://localhost:3333/books/find-all"
-        );
         if (setBooksContext) {
           setBooksContext((prevBook) => [prevBook, response.data]);
+        }
+
+        if (setBookResponse) {
+          setBookResponse(response.data);
         }
 
         setShowModalEdit(false);
@@ -171,7 +151,7 @@ export const FormBookEdit: React.FC<IFormBookEdit> = ({
         </ContainerColumnInput>
         <ContainerColumnImage>
           {!watchedImage || watchedImage.length === 0 ? (
-            <img src={bookOne.imageUrl} alt="default" />
+            <img src={bookResponse?.imageUrl} alt="default" />
           ) : (
             <img src={URL.createObjectURL(watchedImage[0])} alt="uploaded" />
           )}

@@ -52,7 +52,7 @@ export class BookRepositoryPostgres implements BookRepository {
         id: book.id,
         title: book.title,
         releaseDate: book.releaseDate,
-        authorId: book.authorId,
+        authorId: book.Author.name,
         description: limitWord(book.description, 20),
         imageUrl: book.imageUrl,
         Author: {
@@ -104,7 +104,7 @@ export class BookRepositoryPostgres implements BookRepository {
   }
 
   async findOneById(id: string): Promise<Book | IBook> {
-    const bookAlreadyExists: IBook = await this.prismaService.book.findFirst({
+    let bookAlreadyExists: IBook = await this.prismaService.book.findFirst({
       where: {
         id,
       },
@@ -120,6 +120,17 @@ export class BookRepositoryPostgres implements BookRepository {
     if (!bookAlreadyExists) {
       throw new Error("Book not found");
     }
+
+    const author = await this.prismaService.author.findFirst({
+      where: {
+        id: bookAlreadyExists.authorId,
+      },
+    });
+
+    bookAlreadyExists = {
+      ...bookAlreadyExists,
+      authorId: author.name,
+    };
 
     return bookAlreadyExists;
   }
@@ -180,26 +191,31 @@ export class BookRepositoryPostgres implements BookRepository {
     });
 
     if (!author) {
+      console.log(author);
       author = Author.createAuthor(book.authorId, "2021-09-01");
-      await this.prismaService.author.create({
+      const resp = await this.prismaService.author.create({
         data: author,
       });
     }
+
+    let payload = {
+      ...book,
+      authorId: author.id,
+    };
 
     const responseUpdate = await this.prismaService.book.update({
       where: {
         id: book.id,
       },
-      data: {
-        ...book,
-        authorId: author.id,
-      },
-      include: {
-        Author: true,
-      },
+      data: payload,
     });
 
-    return responseUpdate;
+    payload = {
+      ...responseUpdate,
+      authorId: author.name,
+    };
+
+    return payload;
   }
 }
 

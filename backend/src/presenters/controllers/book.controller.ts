@@ -73,12 +73,12 @@ export class BookController {
   }
 
   async updateBook(req: Request, res: Response): Promise<Response> {
-    const { title, author, releaseDate, description, imageUrl } = req.body;
+    const { title, authorId, releaseDate, description, imageUrl } = req.body;
 
     try {
       const response = await this.updateBookUseCase.execute(req.params.id, {
         title,
-        author,
+        authorId,
         releaseDate,
         description,
         imageUrl,

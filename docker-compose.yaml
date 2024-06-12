@@ -17,6 +17,12 @@ services:
       - fit-network
     depends_on:
       - postgres-fit
+    entrypoint:
+      [
+        "/bin/sh",
+        "-c",
+        "/usr/src/app/entrypoint.sh yarn start:prod & yarn prisma:seed && wait",
+      ]
 
   frontend_react:
     container_name: frontend_react

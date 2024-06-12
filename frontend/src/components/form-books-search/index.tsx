@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { ContainerFormSearch } from "./style";
-import axios from "axios";
 import { useBooks } from "../../context/book.context";
+import api from "../../api";
 
 export const FormBookSearch: React.FC = () => {
   const { setBooksContext } = useBooks();
   const [titleSearch, setTitleSearch] = useState<string>("");
   const handleSearchBookParams = async () => {
-    const response = await axios.get(
-      `http://localhost:3333/books/find-all?titleSearch=${titleSearch}`
+    const response = await api.get(
+      `/books/find-all?titleSearch=${titleSearch}`
     );
 
     if (setBooksContext) setBooksContext(response.data);

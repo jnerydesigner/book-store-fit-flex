@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   createContext,
   ReactNode,
@@ -6,6 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import api from "../api";
 
 export interface IBook {
   id: string;
@@ -24,6 +24,8 @@ interface IBookContextProps {
   setBooksContext?: React.Dispatch<React.SetStateAction<IBook[]>>;
   author: string;
   setAuthor: React.Dispatch<React.SetStateAction<string>>;
+  bookResponse?: IBook;
+  setBookResponse?: React.Dispatch<React.SetStateAction<IBook>>;
 }
 
 const BookContext = createContext<IBookContextProps | undefined>(undefined);
@@ -34,10 +36,11 @@ interface BookProviderProps {
 
 export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
   const [booksContext, setBooksContext] = useState<IBook[]>([]);
+  const [bookResponse, setBookResponse] = useState<IBook>({} as IBook);
   const [author, setAuthor] = useState<string>("");
   useEffect(() => {
     const booksFindAll = async () => {
-      const response = await axios.get("http://localhost:3333/books/find-all");
+      const response = await api.get("/books/find-all");
 
       setBooksContext(response.data);
     };
@@ -46,7 +49,14 @@ export const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
 
   return (
     <BookContext.Provider
-      value={{ booksContext, setBooksContext, author, setAuthor }}
+      value={{
+        booksContext,
+        setBooksContext,
+        author,
+        setAuthor,
+        bookResponse,
+        setBookResponse,
+      }}
     >
       {children}
     </BookContext.Provider>
