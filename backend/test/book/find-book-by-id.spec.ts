@@ -25,7 +25,7 @@ describe("Find Book By Id", () => {
 
     const response = await findById.execute(responseCreate.id);
 
-    expect(response.author).toBe(book.author);
+    expect(response.authorId).toBe(book.author);
   });
 
   it("Should be not find and rejects call error not found book", async () => {

@@ -20,7 +20,7 @@ describe("Find Author", () => {
 
     const response = await createAuthor.execute(authorInput);
 
-    const responseAuthor = await findAuthorById.execute(response.authorId);
+    const responseAuthor = await findAuthorById.execute(response.id);
 
     expect(responseAuthor.name).toBe(authorInput.name);
   });

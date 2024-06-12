@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { BookRepository } from "@infra/repository/book.repository";
 import { inject, injectable } from "tsyringe";
 

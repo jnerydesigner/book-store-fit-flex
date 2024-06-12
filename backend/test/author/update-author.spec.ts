@@ -23,16 +23,16 @@ describe("Update Author", () => {
 
     const response = await createAuthor.execute(authorInputCreate);
 
-    const responseAuthor = await findAuthorById.execute(response.authorId);
+    const responseAuthor = await findAuthorById.execute(response.id);
 
     const authorInputUpdate = {
-      id: responseAuthor.authorId,
+      id: responseAuthor.id,
       name: "H. G. Wells",
       birthDate: "1866-09-21",
     };
 
     const updateAuthorResponse = await updateAuthor.execute(
-      response.authorId,
+      response.id,
       authorInputUpdate
     );
 

@@ -47,7 +47,7 @@ describe("Update Book", () => {
     );
 
     expect(response.title).toBe(bookInputUpdate.title);
-    expect(response.author).toBe(bookInputUpdate.author);
+    expect(response.authorId).toBe(bookInputUpdate.author);
     expect(response.releaseDate).toBe(bookInputUpdate.releaseDate);
     expect(response.description).toBe(bookInputUpdate.description);
   });

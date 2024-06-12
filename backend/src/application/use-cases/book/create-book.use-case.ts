@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { Book } from "@domain/entities/book.entity";
 
 import { BookRepository } from "@infra/repository/book.repository";

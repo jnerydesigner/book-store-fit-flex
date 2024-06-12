@@ -21,7 +21,7 @@ describe("Create Book", () => {
 
     const response = await bookRepository.findOneById(responseCreate.id);
 
-    expect(response.author).toBe(bookInput.author);
+    expect(response.authorId).toBe(bookInput.author);
     expect(response.title).toBe(bookInput.title);
   });
 
