@@ -23,10 +23,13 @@ export const HeaderDetail = () => {
   const navigate = useNavigate();
   const { book_id: bookId } = useParams() as { book_id: string };
   const handleDelete = async (bookId: string) => {
-    api.delete(`/books/${bookId}`);
+    console.log("bookId", bookId);
+    await api.delete(`/books/${bookId}`);
 
-    if (setBooks) {
-      setBooks((prevBooks) => prevBooks?.filter((book) => book.id !== bookId));
+    if (setBooksContext) {
+      setBooksContext((prevBooks) =>
+        prevBooks?.filter((book) => book.id !== bookId)
+      );
     }
 
     navigate("/");
