@@ -1,9 +1,6 @@
 ![Capa Github](https://github.com/jnerydesigner/book-store-fit-flex/blob/main/assets/capa-para-github.png)
 
-<<<<<<< HEAD
-
 # Book Store Fit
-
 
 1. Primeira execução:
 
@@ -20,9 +17,9 @@ http://localhost:3000
 ```
 
 3. Um erro que não foi tratado, no delete de um livro, o mesmo ainda fica na página home, necessário o pressionamento da tecla F5, para restaurar o contexto, so aconteceu no docker.
-
 4. Para execução sem o docker de tudo:
-    * substitua o docker compose da raiz pelo que está abaixo:
+
+   * substitua o docker compose da raiz pelo que está abaixo:
 
 ```
 version: "3.9"
@@ -115,7 +112,6 @@ networks:
 
     ```
 
-
     * Após executada esses comandos, siga para a pasta "backend", rode o comando:
 
     ```
@@ -123,7 +119,7 @@ networks:
 
     ```
 
-     * Após executada esses comandos, siga para a pasta "frontend", rode o comando:
+    * Após executada esses comandos, siga para a pasta "frontend", rode o comando:
 
     ```
     yarn start
@@ -131,16 +127,9 @@ networks:
     ```
 
 5. Rode os testes:
+
 ```
 yarn test
 ```
 
 6. Aplicação inspirada em TDD, puxando um pouco do Clean Code e alguns patterns do SOLID.
-
-
-=======
-https://github.com/jnerydesigner/book-store-fit-flex/blob/main/assets/capa-para-github.png
-
-![Texto Alternativo](URL_da_Imagem)
-
->>>>>>> ccf654b1c9f8557057dafb6d8a9e544a31c529ae
