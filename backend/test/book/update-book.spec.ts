@@ -34,7 +34,7 @@ describe("Update Book", () => {
 
     const bookInputUpdate = {
       title: "Nineteen Eighty-Four (1984)",
-      author: "George Orwell",
+      authorId: "George Orwell",
       releaseDate: "1949-01-01",
       description:
         "Nineteen Eighty-Four, muitas vezes publicado como 1984, é um romance distópico de ficção política e social escrita pelo autor inglês George Orwell. Publicado em 1949, é a obra mais conhecida do autor, sendo o seu último livro publicado em vida.",
@@ -47,7 +47,7 @@ describe("Update Book", () => {
     );
 
     expect(response.title).toBe(bookInputUpdate.title);
-    expect(response.authorId).toBe(bookInputUpdate.author);
+    expect(response.authorId).toBe(bookInputUpdate.authorId);
     expect(response.releaseDate).toBe(bookInputUpdate.releaseDate);
     expect(response.description).toBe(bookInputUpdate.description);
   });
@@ -57,7 +57,7 @@ describe("Update Book", () => {
 
     const bookInputUpdate = {
       title: "The Lord Of The Rings",
-      author: "J.R.R. Tolkien",
+      authorId: "J.R.R. Tolkien",
       releaseDate: "1937-09-21",
       description:
         "The Hobbit é um livro de fantasia escrito por J.R.R. Tolkien. Publicado pela primeira vez em 1937, ele é um precursor da trilogia O Senhor dos Anéis.",

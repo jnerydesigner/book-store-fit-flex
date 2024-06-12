@@ -5,6 +5,7 @@ import { PrismaService } from "@infra/database/client/prisma.client";
 import { limitWord } from "@infra/helpers/limit-word.helper";
 import { LoggerService } from "@infra/logger/logger.service";
 import { BookMapperResponse } from "@infra/mapper/books.mapper";
+import { Prisma } from "@prisma/client";
 import { inject, injectable } from "tsyringe";
 
 export interface BookRepository {
@@ -29,15 +30,19 @@ export class BookRepositoryPostgres implements BookRepository {
     titleSearch: string,
     descriptionSearch: string
   ): Promise<Book[] | IBook[]> {
-    let books = await this.prismaService.book.findMany({
-      where: {
+    let where: Prisma.BookWhereInput;
+    if (!titleSearch || !descriptionSearch) {
+      where = {
         title: {
           contains: titleSearch,
         },
         description: {
           contains: descriptionSearch,
         },
-      },
+      };
+    }
+    let books = await this.prismaService.book.findMany({
+      where,
       include: {
         Author: {
           select: {

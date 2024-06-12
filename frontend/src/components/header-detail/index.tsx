@@ -24,15 +24,27 @@ export const HeaderDetail = () => {
   const { book_id: bookId } = useParams() as { book_id: string };
   const handleDelete = async (bookId: string) => {
     console.log("bookId", bookId);
-    await api.delete(`/books/${bookId}`);
+    try {
+      await api.delete(`/books/${bookId}`);
+      const updatedBooksRes = await api.get<IBook[]>("/books/find-all");
+      const updatedBooks = updatedBooksRes.data;
 
-    if (setBooksContext) {
-      setBooksContext((prevBooks) =>
-        prevBooks?.filter((book) => book.id !== bookId)
-      );
+      const filteredBooks = updatedBooks.filter((book) => book.id !== bookId);
+
+      if (setBooksContext) {
+        setBooksContext(filteredBooks);
+      }
+
+      navigate("/");
+    } catch (err) {
+      const booksRes = await api.get<IBook[]>(`/books/find-all`);
+
+      if (setBooksContext) {
+        setBooksContext(booksRes.data);
+      }
+
+      navigate("/");
     }
-
-    navigate("/");
   };
 
   const handleBackHome = async () => {
