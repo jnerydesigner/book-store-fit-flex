@@ -10,7 +10,10 @@ export class FindAllBooksUseCase {
     @inject("BookRepository") readonly bookRepository: BookRepository
   ) {}
 
-  async execute(): Promise<Book[]> {
-    return await this.bookRepository.findAll();
+  async execute(
+    titleSearch: string,
+    descriptionSearch: string
+  ): Promise<Book[]> {
+    return await this.bookRepository.findAll(titleSearch, descriptionSearch);
   }
 }

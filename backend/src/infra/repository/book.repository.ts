@@ -9,7 +9,10 @@ import { inject, injectable } from "tsyringe";
 
 export interface BookRepository {
   save(book: Book): Promise<Book | BookMapperResponse>;
-  findAll(): Promise<Book[] | any[]>;
+  findAll(
+    titleSearch?: string,
+    descriptionSearch?: string
+  ): Promise<Book[] | any[]>;
   findOneById(id: string): Promise<Book | BookMapperResponse>;
   delete(id: string): Promise<void>;
   findByTitle(title: string): Promise<Book | undefined>;
@@ -22,8 +25,19 @@ export class BookRepositoryPostgres implements BookRepository {
     @inject(LoggerService) private readonly logger: LoggerService,
     @inject(PrismaService) private readonly prismaService: PrismaService
   ) {}
-  async findAll(): Promise<Book[] | IBook[]> {
+  async findAll(
+    titleSearch: string,
+    descriptionSearch: string
+  ): Promise<Book[] | IBook[]> {
     let books = await this.prismaService.book.findMany({
+      where: {
+        title: {
+          contains: titleSearch,
+        },
+        description: {
+          contains: descriptionSearch,
+        },
+      },
       include: {
         Author: {
           select: {

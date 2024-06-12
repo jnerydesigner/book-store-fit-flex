@@ -1,10 +1,10 @@
-import { BookController } from "@controllers/book.controller";
-import { Router } from "express";
+import { BookController, Params } from "@controllers/book.controller";
+import { Request, Router } from "express";
 import { container } from "tsyringe";
 
 const router = Router();
 
-router.get("/books/find-all", async (req, res) => {
+router.get("/books/find-all", async (req: Request<{}, {}, {}, Params>, res) => {
   const authorController = container.resolve(BookController);
 
   return authorController.findAllBooks(req, res);

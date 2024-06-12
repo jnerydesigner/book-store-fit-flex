@@ -7,6 +7,11 @@ import { FindByIdUseCase } from "@application/use-cases/book/find-by-id.use-case
 import { UpdateBookUseCase } from "@application/use-cases/book/update-book.use-case";
 import { DeleteBookUseCase } from "@application/use-cases/book/delete-book.use-case";
 
+export interface Params {
+  titleSearch: string;
+  descriptionSearch: string;
+}
+
 @injectable()
 export class BookController {
   constructor(
@@ -22,8 +27,15 @@ export class BookController {
     private readonly deleteBookUseCase: DeleteBookUseCase
   ) {}
 
-  async findAllBooks(_: Request, res: Response): Promise<Response> {
-    const response = await this.findAllBookUseCase.execute();
+  async findAllBooks(
+    request: Request<{}, {}, {}, Params>,
+    res: Response
+  ): Promise<Response> {
+    const { query } = request;
+    const response = await this.findAllBookUseCase.execute(
+      query.titleSearch,
+      query.descriptionSearch
+    );
 
     return res.status(201).json(response);
   }
